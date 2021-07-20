@@ -20,7 +20,7 @@ github:
     addBadge: true
     addLabel: false
 ports:
-  - port: 8888
+  - port: 888
     onOpen: open-preview
   - port: 3000
     onOpen: ignore    
