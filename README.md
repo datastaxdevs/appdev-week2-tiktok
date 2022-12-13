@@ -834,12 +834,11 @@ Let the rest of the fields untouched. You can see that every query is paged and 
 
 #### `✅.4.2.1` - Initialization 
 
-Let's briefly dive into the connection between our serverless functions and our Astra DB.
-We are using the `@astrajs/collections` library to make the connection using the Document API provided by Stargate. To do so, we start by creating a 'client'. 
+We are using the `@astrajs/collections` library to make the connection using the Document API. To do so, we start by creating a `client`. 
 
-(See: `functions/utils/astraClient.js`)
+(See: [functions/utils/astraClient.js](./functions/utils/astraClient.js))
 
-``` javascript
+```javascript
 const { createClient } = require("@astrajs/collections");
 
 let astraClient = null;
@@ -859,11 +858,11 @@ const getAstraClient = async () => {
 };
 ```
 
-Here we are defining a new method called `getAstraClient` that uses the `createClient` method from our `astrajs` library to create a connection to our database. We then provide it the needed database credentials we added to our environment varaiables earlier;
+Here we are defining a new method called `getAstraClient` that uses the `createClient` method from our `astrajs` library to create a connection to our database. We then provide it the needed database credentials we added to our environment variables earlier;
 
-- `ASTRA_DB_ID`
-- `ASTRA_DB_REGION`
-- `ASTRA_DB_APPLICATION_TOKEN`
+- `ASTRA_DB_ID` _(unique identifier for a db)_
+- `ASTRA_DB_REGION` _(cloud region, here `us-east1`)_
+- `ASTRA_DB_APPLICATION_TOKEN` _(credentials)_
 
 Then we return the `astraClient` we can then use in our API calls.
 
@@ -880,9 +879,9 @@ const getCollection = async () => {
 
 In this method, we are using our previously created `getAstraClient` method to initialize the database connection, and then create a collection in the keyspace we defined in our environment variables;
 
-- `ASTRA_DB_KEYSPACE`
+- `ASTRA_DB_KEYSPACE` (for us `tiktok_keyspace`)
 
-We will call the collection "**tktkposts**".
+We will call the collection **tktkposts**.
 
 #### `✅.4.2.b` - Create document with `@astrajs/collections`  
 
@@ -952,7 +951,26 @@ This is the configuration file we include in our codebase that tells Netlify how
 
 So Netlify will create endpoints for our serverless functions based on the files it finds in our functions folder.
 
-For example, we have a function called `posts.js`. As we saw before, this function returns all of the current posts in our database. Netlify will see that file in our `functions` directory and dynamically create an endpoint at `/.netlify/functions/posts`.
+For example, we have a function called `posts.js`. As we saw before, this function returns all of the current posts in our database. Netlify will see that file in our `functions` directory and dynamically create an endpoint at [/.netlify/functions/posts](./functions/posts.js)
+
+```javascript
+// Declaring 'getCollection'
+const { getCollection } = require("./utils/astraClient");
+
+// Function exported as a REST API
+exports.handler = async function () {
+  // Accessing the collection tkt
+  const tktkpostsCollection = await getCollection();
+  try {
+    // Access POST
+    const res = await tktkpostsCollection.find({});
+    return {
+      // Return POSTS in the body
+      statusCode: 200,
+      body: JSON.stringify(Object.keys(res).map((i) => res[i])),
+      
+[...]
+```
 
 ✅ We can see these functions in our Netlify account.
 - Go to netlify.com and sign in.
@@ -968,6 +986,64 @@ We can also see this in action by manually going to the endpoint on our Netlify 
 ![netlify_endpoint](./tutorial/images/netlify_endpoint_nav.gif)
 
 ### 4.4 - React Component
+
+The front end leverages on React. The code is organized in pages and each pages import a list of components.
+
+#### `✅.4.4.a` - React Router
+
+There are 2 pages `updload` and `Home` and describe in [index.js](./src/index.js)
+
+```xml
+<Switch>
+  <Route path= "/upload" component={Upload}/>
+  <Route path= "/" component={Home}/>
+</Switch>
+```
+
+![netlify_endpoint](./tutorial/images/pages-all.png)
+
+#### `✅.4.4.b` - Page Upload
+
+Access through the `cloud` icon of directly on `/upload` it is a static HTML form to create new posts.
+
+![netlify_endpoint](./tutorial/images/page-upload.png)
+
+As you can see [Upload.js](./src/pages/Upload.js) there are no component used.
+
+```html
+<form onSubmit={handleSubmit}>
+    <div className='section'>
+<!-- rest is omitted --> 
+```
+
+- Function to post to backend
+
+```javascript
+ const handleSubmit = async (e) => {
+ e.preventDefault()
+ // Create payload
+ const data =  {
+        id: id,
+        name: name,
+        username: username,
+        avatar: avatar,
+        is_followed: false,
+        video: video,
+        caption: caption,
+        likes: 0,
+        comments: 0,
+        timestamp: timestamp,
+        button_visible: false  
+  }
+  // Post Payload to Netlify functions
+  axios.post('/.netlify/functions/add', data)
+       .then((response) => { console.log(response)})
+       .catch((err) => { console.error(err)})
+```
+
+#### `✅.4.4.b` - Page Home
+
+
 
 
 ## LAB 5 - Netlify Deployments
@@ -987,45 +1063,42 @@ netlify login
 
 _Note, when using GitPod the preview pane will not display this properly. You must click the "open in a new window" button in the very top right of the preview pane._
 
-![swaggerui_link](./tutorial/images/netlify-login.png?raw=true)
+![swaggerui_link](./tutorial/images/netlify_login.png)
 
-```
-gitpod /workspace/workshop-astra-tik-tok (master) $ netlify login
-Logging into your Netlify account...
-Opening https://app.netlify.com/authorize?response_type=ticket&ticket=774701161c326912e718b3a86096f375
+> `Output`
+> 
+> ```bash
+> Logging into your Netlify account...
+> Opening https://app.netlify.com/authorize?response_type=ticket&ticket=774701161c326912e718b3a86096f375
+> You are now logged into your Netlify account!
+> Run netlify status for account details
+> To see all available commands run: netlify help
+> ```
 
-You are now logged into your Netlify account!
-
-Run netlify status for account details
-
-To see all available commands run: netlify help
-```
-
-
-
-
-* This will link your workspace to the associated site
+- Link your workspace to the associated site with the command Below
 
 ```
 netlify link
 ```
 
-- In the list pick `Use current git remote origin`...
+- It will display a MENU where you can move UP and DOWN with arrows. Pick first choice
 
-```bash
-netlify link will connect this folder to a site on Netlify
-
-? How do you want to link this folder to a site? Use current git remote origin (https://github.com/clun/workshop-astra-tik-tok)
-
-Looking for sites connected to 'https://github.com/clun/workshop-astra-tik-tok'...
-
-Directory Linked
-
-Admin url: https://app.netlify.com/sites/fanciful-licorice-ea1437
-Site url:  https://fanciful-licorice-ea1437.netlify.app
-
-You can now run other `netlify` cli commands in this directory
 ```
+> Use current git remote origin (https://github ...`
+```
+
+![swaggerui_link](./tutorial/images/netlify-link.png?raw=true)
+
+> `Output`
+> ```bash
+> netlify link will connect this folder to a site on Netlify
+> ? How do you want to link this folder to a site? Use current git remote origin (https://github.com/clun/workshop-astra-tik-tok)
+> Looking for sites connected to 'https://github.com/clun/workshop-astra-tik-tok'...
+> Directory Linked
+> Admin url: https://app.netlify.com/sites/fanciful-licorice-ea1437
+> Site url:  https://fanciful-licorice-ea1437.netlify.app
+> You can now run other `netlify` cli commands in this directory
+>```
 
 #### `✅.5.1.b` - Import configuration in site
 
@@ -1033,12 +1106,6 @@ You can now run other `netlify` cli commands in this directory
 
 ```
 netlify env:import .env
-```
-
-```
-site: fanciful-licorice-ea1437
-.--------------------------------
-...
 ```
 
 ### 5.2 - Deploy to production
@@ -1051,84 +1118,83 @@ Now that you've hooked everything up, time to deploy to production.
 netlify build
 ```
 
-```
 
-────────────────────────────────────────────────────────────────
-  Netlify Build                                                 
-────────────────────────────────────────────────────────────────
-
-❯ Version
-  @netlify/build 28.4.5
-
-❯ Flags
-  dry: false
-  offline: false
-
-❯ Current directory
-  /workspace/workshop-astra-tik-tok
-
-❯ Config file
-  /workspace/workshop-astra-tik-tok/netlify.toml
-
-❯ Context
-  production
-
-────────────────────────────────────────────────────────────────
-  1. build.command from netlify.toml                            
-────────────────────────────────────────────────────────────────
-
-$ npm run build
-
+> `Output`
+> ```
+> ────────────────────────────────────────────────────────────────
+>   Netlify Build                                                 
+> ────────────────────────────────────────────────────────────────
+>
+> ❯ Version
+>   @netlify/build 28.4.5
+>
+> ❯ Flags
+>   dry: false
+>   offline: false
+>
+> ❯ Current directory
+>   /workspace/workshop-astra-tik-tok
+>
+> ❯ Config file
+>   /workspace/workshop-astra-tik-tok/netlify.toml
+>
+> ❯ Context
+>   production
+>
+> ────────────────────────────────────────────────────────────────
+>   1. build.command from netlify.toml                            
+> ────────────────────────────────────────────────────────────────
+>
+> $ npm run build
+> 
 > tik-tok-stargate@0.1.0 build
 > react-scripts build
-
-Creating an optimized production build...
-Compiled successfully.
-
-File sizes after gzip:
-
-  616.87 KB  build/static/js/2.82b8325c.chunk.js
-  2.32 KB    build/static/js/main.fd7c93f3.chunk.js
-  966 B      build/static/css/main.9d8c5499.chunk.css
-  780 B      build/static/js/runtime-main.f09b770f.js
-
-The project was built assuming it is hosted at /.
-You can control this with the homepage field in your package.json.
-
-The build folder is ready to be deployed.
-You may serve it with a static server:
-
-  npm install -g serve
-  serve -s build
-
-Find out more about deployment here:
-
-  https://cra.link/deployment
-
-
-(build.command completed in 35.1s)
-
-────────────────────────────────────────────────────────────────
-  2. Functions bundling                                         
-────────────────────────────────────────────────────────────────
-
-Packaging Functions from functions directory:
- - add.js
- - addData.js
- - edit.js
- - posts.js
-
-
-(Functions bundling completed in 6.1s)
-
-────────────────────────────────────────────────────────────────
-  Netlify Build Complete                                        
-────────────────────────────────────────────────────────────────
-
-(Netlify Build completed in 41.3s)
-```
-
-
+>
+> Creating an optimized production build...
+> Compiled successfully.
+>
+> File sizes after gzip:
+>
+>   616.87 KB  build/static/js/2.82b8325c.chunk.js
+>   2.32 KB    build/static/js/main.fd7c93f3.chunk.js
+>   966 B      build/static/css/main.9d8c5499.chunk.css
+>   780 B      build/static/js/runtime-main.f09b770f.js
+>
+> The project was built assuming it is hosted at /.
+> You can control this with the homepage field in your package.json.
+> 
+> The build folder is ready to be deployed.
+> You may serve it with a static server:
+>
+>  npm install -g serve
+>  serve -s build
+>
+> Find out more about deployment here:
+>
+>   https://cra.link/deployment
+>
+>
+> (build.command completed in 35.1s)
+>
+> ────────────────────────────────────────────────────────────────
+>   2. Functions bundling                                         
+> ────────────────────────────────────────────────────────────────
+>
+> Packaging Functions from functions directory:
+>  - add.js
+>  - addData.js
+>  - edit.js
+>  - posts.js
+>
+>
+> (Functions bundling completed in 6.1s)
+>
+> ────────────────────────────────────────────────────────────────
+>   Netlify Build Complete                                        
+> ────────────────────────────────────────────────────────────────
+>
+> (Netlify Build completed in 41.3s)
+> ```
 
 - Then run
 
@@ -1136,21 +1202,22 @@ Packaging Functions from functions directory:
 netlify deploy --prod
 ```
 
-```
-Deploy path:        /workspace/workshop-astra-tik-tok/build
-Functions path:     /workspace/workshop-astra-tik-tok/functions
-Configuration path: /workspace/workshop-astra-tik-tok/netlify.toml
-Deploying to main site URL...
-✔ Deploying functions from cache (use --skip-functions-cache to override)
-✔ Finished hashing 17 files and 4 functions
-✔ CDN requesting 0 files and 4 functions
-✔ Finished uploading 4 assets
-✔ Deploy is live!
-
-Logs:              https://app.netlify.com/sites/fanciful-licorice-ea1437/deploys/63974804721fc334dc247455
-Unique Deploy URL: https://63974804721fc334dc247455--fanciful-licorice-ea1437.netlify.app
-Website URL:       https://fanciful-licorice-ea1437.netlify.app
-gitpod /workspace/workshop-astra-tik-tok (master) $ 
+> `Output`
+> ```
+> Deploy path:        /workspace/workshop-astra-tik-tok/build
+> Functions path:     /workspace/workshop-astra-tik-tok/functions
+> Configuration path: /workspace/workshop-astra-tik-tok/netlify.toml
+> Deploying to main site URL...
+> ✔ Deploying functions from cache (use --skip-functions-cache to override)
+> ✔ Finished hashing 17 files and 4 functions
+> ✔ CDN requesting 0 files and 4 functions
+> ✔ Finished uploading 4 assets
+> ✔ Deploy is live!
+>
+> Logs:              https://app.netlify.com/sites/fanciful-licorice-ea1437/deploys/63974804721fc334dc247455
+> Unique Deploy URL: https://63974804721fc334dc247455--fanciful-licorice-ea1437.netlify.app
+> Website URL:       https://fanciful-licorice-ea1437.netlify.app
+> gitpod /workspace/workshop-astra-tik-tok (master) $ 
 ```
 
 - Then finally run
@@ -1159,10 +1226,11 @@ gitpod /workspace/workshop-astra-tik-tok (master) $
 netlify open:site
 ```
 
-```
-Opening "fanciful-licorice-ea1437" site url:
+> `Output`
+> ```
+> Opening "fanciful-licorice-ea1437" site url:
 > https://fanciful-licorice-ea1437.netlify.app
-```
+> ```
 
 ## Extra Resources
 
