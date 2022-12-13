@@ -6,7 +6,7 @@ exports.handler = async function () {
     const res = await users.find({});
     return {
       statusCode: 200,
-      body: JSON.stringify(Object.keys(res).map((i) => res[i])),
+      body: JSON.stringify(Object.keys(res.data).map((i) => res.data[i])),
       headers: {
         'Content-type': 'application/json',
       },
