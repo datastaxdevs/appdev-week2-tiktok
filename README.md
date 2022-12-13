@@ -23,10 +23,11 @@ A simple Tik-Tok clone running on Astra DB that leverages the Document API. You 
   - [3. Materials for the Session](#3---materials-for-the-session)
   - [4. Homework](#4---homework)
 - **[LAB 1 - Getting Started with Database](#lab-1---getting-started-with-database)**
-  - [1.1 - Create Astra DB Instance](#11---getting-started-with-database)
-  - [1.2 - Create Astra Credentials](#12---create-astra-credentials)
+  - [1.1 - Create Astra Account](#11---getting-started-with-database)
+  - [1.2 - Create Astra Database](#11---getting-started-with-database)
 - **[LAB 2 - Document API](#lab-2---document-api)**
   - [2.1 - Using Document API](#21-using-document-api)
+  - [2.2 - Create Astra Credentials](#22---create-astra-credentials)
 - **[LAB 3 - IDE Setup](#lab-3---ide-setup)**  
   - [3.1 - Netlify site setup](#31---netlify-site-setup)
   - [3.2 - Launch GitPod](#32---launch-gitpod)
@@ -126,62 +127,70 @@ _**`ASTRA`** is the simplest way to run both Cassandra and Pulsar with zero oper
 
 #### `✅.1.1.a`- Create Astra Account
 
-Follow the [Database creation guide](https://awesome-astra.github.io/docs/pages/astra/create-instance/#c-procedure) and create a database. 
-The Astra registration page should have opened with Gitpod, if not use [this link](https://astra.dev/yt-9-14).
-
 > ↗️ _Right Click and select open as a new Tab..._
+> 
+> [![image](./tutorial/images/create_astra_db.png?raw=true)](https://astra.dev/yt-12-14)
 
-<a href="https://astra.dev/yt-12-14"><img src="tutorial/images/create_astra_db.png?raw=true" /></a>
+#### `✅.1.1.b`- Create Astra Database
 
-**Use the following values when creating the database**
-|Field| Value|
-|---|---|
-|**database name**| `workshops` |
-|**keyspace**| `tiktok_keyspace` |
-|**Cloud Provider**| *`Google Cloud Plaform` / `North America` / `Moncks Corner, South Carolina`* |
+- On the home page spot one of the 3 [Create Database] button. They are all doing the same thing.
 
-### 1.2 - Create Astra Credentials
+![image](./tutorial/images/db-create-button.png?raw=true)
 
-#### `✅.1.2.a`- Create Astra Credentials
+- Use the following values when creating the database:
 
-_Skip this step is you already have a token. You can reuse the same token in our other workshops, too._
+| #  | Field Name         | Field Value                     |
+|----|--------------------|---------------------------------|
+| 1  | **Database Name**    | `workshops`                     |
+| 2  | **Keyspace Name**  | `tiktok_keyspace`               |
+| 3  | **Cloud Provider** | `Google Cloud Plaform`          |
+| 4  | **Area**   | `North America`                 |
+| 5  | **Region** | `Moncks Corner, South Carolina` |
 
-- (1) - Go the `Organization Settings`
-- (2) - Go to `Token Management`
-- (3) - Pick the role `Database Admnistrator` on the select box
-- (4) - Click `Generate token`
+> 🖥️ `Output`
+>
+> ![image](./tutorial/images/db-create.png?raw=true)
 
-<img src="tutorial/images/astra-create-token.gif?raw=true" />
- 
-#### `✅.1.2.b`- Download Astra Credentials
+- Now click `[Create Database button]` that became blue.
+- The database is initializing, wait for the DB the move from `[PENDING]` to `[ACTIVE]`
 
-- Click the **`Download CSV`** button. You are going to need these values here in a moment.
+> 🖥️ `Output`
+>
+> ![image](./tutorial/images/db-pending.png?raw=true)
 
-![image](tutorial/images/astra-token.png?raw=true)
+- Click `[Go to Database]`
 
-> **⚠️ Important**
-> ```
-> The instructor will show you on screen how to create a token 
-> but will have to destroy to token immediately for security reasons.
-> ```
+#### `✅.1.1.c`- Database was already existing
 
-Notice the clipboard icon at the end of each value.
-- `Client ID:` We will *not* use this during this workshop
-- `Client Secret:` We will *not* use this during this workshop
-- `Token:` ***This is your token!*** We will use it as a api Key to interact with APIS
+Here are some special situations you might encounter.
+
+> ℹ️ **Hibernated Database:**
+> 
+> If the DB workshops already exists but is hibernated (you have not use it for a while):  
+> - Click the `[Resume Database]` button on the top right-hand corner.
+> 
+> ![image](./tutorial/images/db-resume.png?raw=true) 
+
+> ℹ️ **Database already exists, create keyspace `tiktok_keyspace`**
+>
+> If DB exists and is active but `tiktok_keyspace` keyspace is not present you need to create the keyspace.
+>
+> - Click button `[Add Keyspace]` on the database dashboard (bottom right-hand corner)
+> - Provide the keyspace name `tiktok_keyspace`
+> - Click button `[Save]`. The database will switch in maintenance mode for a few seconds, you are set.
+> 
+> ![image](./tutorial/images/db-create-keyspace.png?raw=true)
 
 ## LAB 2 - Document API
 
 ### 2.1 Using Document API
 
-Once the database status becomes is `active` we can start interacting with it. We will use the HTTP document API.
-
 #### `✅.2.1.a`- Open Swagger User Interface
 
-- (1) -  Select your database in the left panel
+- (1) -  Select your database in the left panel (if needed)
 - (2) -  Select the tab `Connect`
 - (3) -  Select the `Document API` bloc
-- (4) -  In `Launch Swagger UI` right click on the link to open in a new TAB
+- (4) -  In `Launch Swagger UI` right-click on the link to open in a new TAB
 
 ![image](tutorial/images/access-swagger.png?raw=true)
 
@@ -388,40 +397,73 @@ date: Mon,12 Dec 2022 18:12:43 GMT
 vary: Origin 
 ```
 
+### 2.2 - Create Astra Credentials
+
+When using swagger in the user interface, you are already authenticated against the API. When using a third party application you will need a token. 
+
+#### `✅.2.2.a`- Create Astra Credentials
+
+> ℹ️ _Skip this step is you already have a token. You can reuse the same token in our other workshops, too._
+
+- (1) - Go the `Organization Settings`
+- (2) - Go to `Token Management`
+- (3) - Pick the role `Database Admnistrator` on the select box
+- (4) - Click `Generate token`
+
+![image](./tutorial/images/astra-create-token.gif?raw=true)
+
+#### `✅.2.2.b`- Download Astra Credentials
+
+- Click the **`Download CSV`** button. You are going to need these values here in a moment.
+
+![image](./tutorial/images/astra-token.png?raw=true)
+
+> **⚠️ Important**
+> ```
+> The instructor will show you on screen how to create a token 
+> but will have to destroy to token immediately for security reasons.
+> ```
+
+Notice the clipboard icon at the end of each value.
+- `Client ID:` We will *not* use this during this workshop
+- `Client Secret:` We will *not* use this during this workshop
+- `Token:` ***This is your token!*** We will use it as a api Key to interact with APIS
+
 ## LAB 3 - IDE Setup
 
 ### 3.1 - Netlify Site Setup
 
-- (1) (right) Click the button to deploy.
+- (1) Click the button to deploy.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/datastaxdevs/workshop-astra-tik-tok)
+> ↗️ _Right Click and select open as a new Tab..._
+>
+> [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/datastaxdevs/workshop-astra-tik-tok)
 
-- (2) - Authentification with your github Account
+- (2) - Authenticate with your github Account
 
-- (3) - Select account and github repository where to clone
+- (3) - Select an account and the github repository where to clone
 
-<img src="tutorial/images/deploy-to-netlify.gif?raw=true" />
+![image](./tutorial/images/deploy-to-netlify.gif?raw=true)
     
-- (3) - In netlify user interface click on `Site deploy in progress` 
+- (4) - In netlify user interface click on `Site deploy in progress` 
 
 > <img src="tutorial/images/deploy-1.png" />
 
-- (4) - Click the top deploy link to see the build process.
+- (5) - Click the top deploy link to see the build process.
 
 > <img src="tutorial/images/deploy-2.png" />
 
-- (5) - Wait until the build complete `Netlify Build Complete`,  **When you see Pushing to repository** you're ready to move on.
+- (6) - Wait until the build complete `Netlify Build Complete`,  **When you see Pushing to repository** you're ready to move on.
 
 > <img src="tutorial/images/deploy-3.png" />
 
-- (6) Scroll up to the top and click on the site name (it'll be after {yourlogin}'s Team next to the Netlify button).
+- (7) Scroll up to the top and click on the site name (it'll be after {yourlogin}'s Team next to the Netlify button).
 
 > <img src="tutorial/images/deploy-4.png" />
 
-- (7) - Click on the `GitHub` in `Deploys from GitHub` to get back to your new repository.  Scroll to where you were in the README.
+- (8) - Click on the `GitHub` in `Deploys from GitHub` to get back to your new repository.  Scroll to where you were in the README.
 
 > <img src="tutorial/images/deploy-5.png" />
-
 
 ### 3.2 - Launch GitPod
 
@@ -437,9 +479,11 @@ If you are still using the `datastaxdevs` repo please ensure to follow the previ
 
 #### `✅.3.2.b`- Open Gitpod IDE
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
-   
-#### WAIT! Before moving on ensure you are working out of YOUR repository, not the datastaxdevs repository.
+> Last time, be certain to click this when you MOVED TO YOUR REPOSITORY  (not `datastaxdevs`)
+> 
+> ↗️ _Right Click and select open as a new Tab..._
+> 
+> [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
 
 #### `✅.3.2.c`- Validating your not using `datastaxdevs`
 
@@ -463,6 +507,8 @@ astra setup -t <YOUR_TOKEN>
 
 #### `✅.3.3.b`- Validate your configuration
 
+- In the terminal panel in gitpod enter the following command:
+
 ```
 astra user list
 ```
@@ -478,21 +524,28 @@ astra user list
 > +--------------------------------------+-----------------------------+---------------------+
 > ```
 
-#### `✅.3.3.c`- Create `workshops` with keyspace `tiktok_keyspace` (if needed)
+#### `✅.3.3.c`- List Database to see  `workshops`
+
+- In the terminal panel in gitpod enter the following command:
 
 ```
-astra db create workshops -k tiktok_keyspace --if-not-exist 
+astra db list
 ```
 
 > 🖥️ `Output`
 >
 > ```
-> [INFO]  Database 'workshops' already exist. Connecting to database.
-> [INFO]  Keyspace  'tiktok_keyspace' already exists. Connecting to keyspace.
-> [OK]    Database 'workshops' is ready.
+> +---------------------+--------------------------------------+---------------------+----------------+
+> | Name                | id                                   | Default Region      | Status         |
+> +---------------------+--------------------------------------+---------------------+----------------+
+> | mtg                 | dde308f5-a8b0-474d-afd6-81e5689e3e25 | eu-central-1        | ACTIVE         |
+> | workshops           | 50b31120-2303-4f45-a9dd-1cfb03e24ff1 | us-east1            | ACTIVE         |
+> +---------------------+--------------------------------------+---------------------+----------------+
 > ```
 
 #### `✅.3.3.d`- Get db details
+
+- In the terminal panel in gitpod enter the following command:
 
 ```
 astra db get workshops
@@ -526,7 +579,7 @@ astra db get workshops
  - Create `.env` file
 
 ```
-astra db create-dotenv workshops
+astra db create-dotenv workshops -k tiktok_keyspace -r us-east1
 ```
 
 - Show content
