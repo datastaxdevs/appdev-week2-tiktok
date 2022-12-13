@@ -247,16 +247,17 @@ The output is empty (expected):
 
 - (6) - Following the steps in previous section list collections again, you should get 
 
-```json
-{
-  "data": [
-    {
-      "name": "story",
-      "upgradeAvailable": false
-    }
-  ]
-}
-```
+> 🖥️ `Output`
+> ```json
+> {
+>  "data": [
+>    {
+>      "name": "story",
+>      "upgradeAvailable": false
+>    }
+>  ]
+>}
+>```
 
 #### `✅.2.1.d`- Create a first document
 
@@ -293,11 +294,12 @@ With a document oriented API there is no strict schema to comply with. As such l
 
 - (5) - Should get a HTTP `201` (Created) and the output. A unique identifier has been created for our document.
 
-```json
-{
-  "documentId": "8aa07632-4ffb-46e5-9d78-b32e21847221"
-}
-```
+> 🖥️ `Output`
+> ```json
+> {
+>  "documentId": "8aa07632-4ffb-46e5-9d78-b32e21847221"
+> }
+> ```
 
 #### `✅.2.1.e`- Search documents in a collections
 
@@ -318,23 +320,25 @@ With a document oriented API there is no strict schema to comply with. As such l
 
 - (5) - You should get a result
 
-```json
-{
-  "data": {
-    "8aa07632-4ffb-46e5-9d78-b32e21847221": {
-      "avatar": "https://i.imgur.com/9KYq7VG.png",
-      "button_visible": true,
-      "caption": "These ducks are MEGA cute",
-      "comments": 2,
-      "is_followed": true,
-      "likes": 10,
-      "name": "Mo Farooq",
-      "username": "mofarooq32",
-      "video": "https://i.imgur.com/FTBP02Y.mp4"
-    }
-  }
-}
-```
+> 🖥️ `Output`
+> ```json
+> {
+>  "data": {
+>    "8aa07632-4ffb-46e5-9d78-b32e21847221": {
+>      "avatar": "https://i.imgur.com/9KYq7VG.png",
+>      "button_visible": true,
+>      "caption": "These ducks are MEGA cute",
+>      "comments": 2,
+>      "is_followed": true,
+>      "likes": 10,
+>      "name": "Mo Farooq",
+>      "username": "mofarooq32",
+>      "video": "https://i.imgur.com/FTBP02Y.mp4"
+>    }
+>  }
+>}
+>```
+> 
 
 #### `✅.2.1.f`- Update a document
 
@@ -388,14 +392,15 @@ With a document oriented API there is no strict schema to comply with. As such l
 
 - (5) - You should get a result code of `204`
 
-```
-Code 204
-access-control-allow-credentials: true 
-access-control-allow-origin: https://50b31120-2303-4f45-a9dd-1cfb03e24ff1-us-east1.apps.astra.datastax.com 
-access-control-expose-headers: Date 
-date: Mon,12 Dec 2022 18:12:43 GMT 
-vary: Origin 
-```
+> 🖥️ `Output`
+> ```
+> Code 204
+> access-control-allow-credentials: true 
+> access-control-allow-origin: https://50b31120-2303-4f45-a9dd-1cfb03e24ff1-us-east1.apps.astra.datastax.com 
+> access-control-expose-headers: Date 
+> date: Mon,12 Dec 2022 18:12:43 GMT 
+> vary: Origin 
+> ```
 
 ### 2.2 - Create Astra Credentials
 
@@ -493,8 +498,13 @@ If you are still using the `datastaxdevs` repo please ensure to follow the previ
 git remote -v
 ```
 
-If the result returned from the command displays **`datastaxdevs`** then you are not in the correct repository. If this is the case please [repeat step 3 above](#3-access-your-github-repository), otherwise just move on to the next step.
-
+> 🖥️ `Output`
+> ```
+> origin  https://github.com/clun/workshop-astra-tik-tok.git (fetch)
+> origin  https://github.com/clun/workshop-astra-tik-tok.git (push)
+>If the result returned from the command displays **`datastaxdevs`** then you are not in the correct repository. If this is the case please [repeat step 3 above](#3-access-your-github-repository), otherwise just move on to the next step.
+> ```
+> 
 ### 3.3 - Astra CLI Setup
 
 #### `✅.3.3.a`- Save your token
@@ -633,6 +643,8 @@ netlify dev
 
 The application should automatically launch in the GitPod preview pane. You might see an error in the log for this firt launch, some data is inserted to the database.
 
+> 🖥️ `Output`
+
 ```
 ◈ Netlify Dev ◈
 ◈ Ignored general context env var: LANG (defined in process)
@@ -736,7 +748,6 @@ Now that we have locally deployed our TikTok app, let's take a look at this in o
 Then scroll down to the section called 'Launching SwaggerUI' and click the link. We'll be using SwaggerUI to make api calls to our database and see the results.
 
 ![swaggerui_link](./tutorial/images/swaggerui_link.png?raw=true)
-
 
 #### `✅.4.1.a`- List Collections
 
@@ -1065,7 +1076,7 @@ _Note, when using GitPod the preview pane will not display this properly. You mu
 
 ![swaggerui_link](./tutorial/images/netlify_login.png)
 
-> `Output`
+> 🖥️ `Output`
 > 
 > ```bash
 > Logging into your Netlify account...
@@ -1089,7 +1100,7 @@ netlify link
 
 ![swaggerui_link](./tutorial/images/netlify-link.png?raw=true)
 
-> `Output`
+> 🖥️ `Output`
 > ```bash
 > netlify link will connect this folder to a site on Netlify
 > ? How do you want to link this folder to a site? Use current git remote origin (https://github.com/clun/workshop-astra-tik-tok)
@@ -1119,7 +1130,7 @@ netlify build
 ```
 
 
-> `Output`
+> 🖥️ `Output`
 > ```
 > ────────────────────────────────────────────────────────────────
 >   Netlify Build                                                 
@@ -1202,7 +1213,7 @@ netlify build
 netlify deploy --prod
 ```
 
-> `Output`
+> 🖥️ `Output`
 > ```
 > Deploy path:        /workspace/workshop-astra-tik-tok/build
 > Functions path:     /workspace/workshop-astra-tik-tok/functions
@@ -1226,7 +1237,7 @@ netlify deploy --prod
 netlify open:site
 ```
 
-> `Output`
+> 🖥️ `Output`
 > ```
 > Opening "fanciful-licorice-ea1437" site url:
 > https://fanciful-licorice-ea1437.netlify.app
