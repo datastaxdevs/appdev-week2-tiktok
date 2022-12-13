@@ -1013,7 +1013,7 @@ There are 2 pages `updload` and `Home` and describe in [index.js](./src/index.js
 
 ![netlify_endpoint](./tutorial/images/pages-all.png)
 
-#### `✅.4.4.b` - Page Upload
+#### `✅.4.4.b` - Upload Page
 
 Access through the `cloud` icon of directly on `/upload` it is a static HTML form to create new posts.
 
@@ -1052,10 +1052,13 @@ As you can see [Upload.js](./src/pages/Upload.js) there are no component used.
        .catch((err) => { console.error(err)})
 ```
 
-#### `✅.4.4.b` - Page Home
+#### `✅.4.4.b` - Home Page
 
+The page load data coming from the collection in Astra and push the information to multiple components that renders sections of the page.
 
+![netlify_endpoint](./tutorial/images/react-components.png)
 
+More on [Home.js](./src/pages/Home.js).
 
 ## LAB 5 - Netlify Deployments
 
